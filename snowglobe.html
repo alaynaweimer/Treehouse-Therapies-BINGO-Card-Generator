@@ -473,10 +473,7 @@
             </div>
 
             <div class="progress">
-                <span id="progressText">0 of 24 called</span>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-                </div>
+                <span id="progressText">0 called</span>
             </div>
 
             <div class="called-section">
@@ -748,12 +745,8 @@
         }
 
         function updateProgress() {
-            const total = bingoItems.length;
             const called = calledItems.length;
-            const percent = (called / total) * 100;
-            
-            document.getElementById('progressText').textContent = `${called} of ${total} called`;
-            document.getElementById('progressFill').style.width = `${percent}%`;
+            document.getElementById('progressText').textContent = `${called} called`;
         }
 
         function resetGame() {
