@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treehouse Bingo - Snow Globe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #146B3A;
+            --primary-dark: #0F5132;
+            --secondary: #C41E3A;
+            --accent: #F8B229;
+            --globe-bg: linear-gradient(180deg, #1a3a52 0%, #2d5a7b 50%, #87CEEB 100%);
+        }
+
+        /* Theme Definitions */
+        body.theme-christmas { 
+            --primary: #146B3A; --primary-dark: #0F5132; --secondary: #C41E3A; --accent: #F8B229; 
+            --globe-bg: linear-gradient(180deg, #0a1628 0%, #1a3a52 50%, #2d5a7b 100%);
+        }
+        body.theme-valentine { 
+            --primary: #E91E63; --primary-dark: #C2185B; --secondary: #AD1457; --accent: #FF80AB; 
+            --globe-bg: linear-gradient(180deg, #fce4ec 0%, #f8bbd9 50%, #f48fb1 100%);
+        }
+        body.theme-halloween { 
+            --primary: #FF6F00; --primary-dark: #E65100; --secondary: #7B1FA2; --accent: #FFB300; 
+            --globe-bg: linear-gradient(180deg, #1a0a2e 0%, #2d1b4e 50%, #4a2c6a 100%);
+        }
+        body.theme-easter { 
+            --primary: #AB47BC; --primary-dark: #7B1FA2; --secondary: #26A69A; --accent: #FFD54F; 
+            --globe-bg: linear-gradient(180deg, #e8f5e9 0%, #c8e6c9 50%, #a5d6a7 100%);
+        }
+        body.theme-summer { 
+            --primary: #0288D1; --primary-dark: #01579B; --secondary: #F57C00; --accent: #FFB300; 
+            --globe-bg: linear-gradient(180deg, #0288d1 0%, #4fc3f7 50%, #81d4fa 100%);
+        }
+        body.theme-treehouse { 
+            --primary: #008080; --primary-dark: #006666; --secondary: #FF6B35; --accent: #FFD700; 
+            --globe-bg: linear-gradient(180deg, #004d4d 0%, #006666 50%, #008080 100%);
+        }
+        body.theme-thanksgiving { 
+            --primary: #8B4513; --primary-dark: #6B3410; --secondary: #D2691E; --accent: #DAA520; 
+            --globe-bg: linear-gradient(180deg, #4a2c0a 0%, #6b3e1a 50%, #8b5a2b 100%);
+        }
+        body.theme-stpatricks { 
+            --primary: #228B22; --primary-dark: #006400; --secondary: #32CD32; --accent: #FFD700; 
+            --globe-bg: linear-gradient(180deg, #1b4d1b 0%, #228b22 50%, #32cd32 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            min-height: 100vh;
+            padding: 15px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 450px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 10px;
+        }
+
+        .logo {
+            max-width: 140px;
+            max-height: 70px;
+            margin-bottom: 5px;
+        }
+
+        .header h1 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.6rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Snow Globe */
+        .globe-container {
+            position: relative;
+            width: 260px;
+            height: 300px;
+            margin: 0 auto 15px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .globe {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 230px;
+            height: 230px;
+            background: var(--globe-bg);
+            border-radius: 50%;
+            border: 6px solid #c9c9c9;
+            box-shadow: 
+                inset 0 0 60px rgba(255,255,255,0.2),
+                inset 0 -30px 60px rgba(0,0,0,0.2),
+                0 8px 25px rgba(0,0,0,0.3);
+            overflow: hidden;
+            transition: transform 0.1s ease;
+        }
+
+        .globe::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            width: 60px;
+            height: 30px;
+            background: radial-gradient(ellipse, rgba(255,255,255,0.6) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: rotate(-30deg);
+        }
+
+        .globe.shaking {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(-50%) rotate(0deg); }
+            25% { transform: translateX(-50%) rotate(-8deg) translateY(-5px); }
+            50% { transform: translateX(-50%) rotate(8deg); }
+            75% { transform: translateX(-50%) rotate(-8deg) translateY(-3px); }
+        }
+
+        /* Base */
+        .base {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 60px;
+            background: linear-gradient(to bottom, #8B4513 0%, #5D2E0C 100%);
+            border-radius: 8px 8px 15px 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .base::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 10%;
+            width: 80%;
+            height: 16px;
+            background: linear-gradient(to bottom, #a0522d 0%, #8B4513 100%);
+            border-radius: 50%;
+        }
+
+        /* Particles Container */
+        .particles-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            opacity: 0;
+            font-size: 16px;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
+        }
+
+        .particles-container.active .particle {
+            animation: particleFall ease-out forwards;
+        }
+
+        @keyframes particleFall {
+            0% { 
+                opacity: 1; 
+                transform: translateY(-30px) rotate(0deg) scale(1); 
+            }
+            100% { 
+                opacity: 0.7; 
+                transform: translateY(200px) rotate(360deg) scale(0.8); 
+            }
+        }
+
+        /* Scene inside globe */
+        .scene {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40px;
+            filter: drop-shadow(0 3px 5px rgba(0,0,0,0.3));
+        }
+
+        /* Ground */
+        .ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: white;
+            border-radius: 0 0 50% 50% / 0 0 100% 100%;
+        }
+
+        body.theme-halloween .ground { background: #2d1b4e; }
+        body.theme-valentine .ground { background: #fce4ec; }
+        body.theme-easter .ground { background: #c8e6c9; }
+        body.theme-summer .ground { background: #ffe4b5; }
+        body.theme-thanksgiving .ground { background: #d2691e; }
+        body.theme-stpatricks .ground { background: #90EE90; }
+
+        /* Item Display */
+        .globe-content {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .item-number {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2rem;
+            color: var(--accent);
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.3), 0 0 10px rgba(255,255,255,0.5);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .item-number.show {
+            opacity: 1;
+        }
+
+        .item-text {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.95rem;
+            color: #333;
+            background: rgba(255,255,255,0.95);
+            padding: 8px 12px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+            line-height: 1.2;
+            margin-top: 5px;
+        }
+
+        .item-text.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .tap-hint {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.9);
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        /* Buttons */
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .shake-btn {
+            padding: 12px 35px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Fredoka', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .shake-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        .shake-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .reset-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            font-family: 'Nunito', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .reset-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Progress */
+        .progress {
+            color: white;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+
+        /* Called Items */
+        .called-section {
+            background: white;
+            border-radius: 15px;
+            padding: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        .called-section h3 {
+            font-family: 'Fredoka', sans-serif;
+            color: var(--primary);
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .called-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+        }
+
+        .called-item {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .called-item .num {
+            background: var(--accent);
+            color: #333;
+            padding: 2px 6px;
+            border-radius: 8px;
+            margin-right: 5px;
+            font-weight: 700;
+        }
+
+        /* Footer */
+        .footer {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.8rem;
+            margin-top: 15px;
+        }
+
+        /* Loading */
+        .loading {
+            color: white;
+            padding: 40px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Done state */
+        .done-message {
+            background: var(--accent);
+            color: #333;
+            padding: 15px;
+            border-radius: 15px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .done-message.show {
+            display: block;
+            animation: popIn 0.5s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="theme-christmas">
+    <div class="container">
+        <header class="header">
+            <img src="data:image/webp;base64,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" alt="Treehouse Therapies Logo" class="logo">
+            <h1 id="globeTitle">🎄 Bingo Snow Globe</h1>
+        </header>
+
+        <div id="loadingState" class="loading">
+            <div class="loading-spinner"></div>
+            <p>Loading bingo items...</p>
+        </div>
+
+        <div id="mainContent" style="display: none;">
+            <div id="doneMessage" class="done-message">
+                🎉 All items called! Game complete!
+            </div>
+
+            <div class="globe-container" onclick="shakeGlobe()">
+                <div class="globe" id="globe">
+                    <div class="ground"></div>
+                    <div class="particles-container" id="particles"></div>
+                    <div class="scene" id="scene">🎄</div>
+                    <div class="globe-content">
+                        <div class="tap-hint" id="tapHint">Tap to shake!</div>
+                        <div class="item-number" id="itemNumber"></div>
+                        <div class="item-text" id="itemText"></div>
+                    </div>
+                </div>
+                <div class="base"></div>
+            </div>
+
+            <div class="btn-row">
+                <button class="shake-btn" id="shakeBtn" onclick="shakeGlobe()">🎄 SHAKE!</button>
+                <button class="reset-btn" onclick="resetGame()">🔄 Start Over</button>
+            </div>
+
+            <div class="progress">
+                <span id="progressText">0 of 24 called</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="called-section">
+                <h3>📋 Called Items</h3>
+                <div class="called-items" id="calledItems">
+                    <span style="color: #999; font-size: 0.85rem;">Shake the globe to start!</span>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            Created specifically for Treehouse Therapies through IPCLLC.
+        </footer>
+    </div>
+
+    <script>
+        // ========================================
+        // CONFIGURATION
+        // ========================================
+        const SHEET_ID = '1UsmueL5MY5-qx5rt6vPBQgZxdrFquzClMhD6K7AKE_8';
+        const SHEET_NAME = 'Sheet1';
+        const SETTINGS_SHEET = 'Settings';
+        const ITEMS_COLUMN = 0;
+        const HAS_HEADER = false;
+        const DEFAULT_THEME = 'christmas';
+
+        // ========================================
+        // THEME CONFIGURATIONS
+        // ========================================
+        const THEMES = {
+            christmas: {
+                particles: ['❄️', '❄️', '❄️', '⭐', '🎄', '🎁', '🔔', '⛄'],
+                scenes: ['🎄', '⛄', '🎅', '🦌', '🎁'],
+                buttonEmoji: '🎄',
+                title: '🎄 Bingo Snow Globe'
+            },
+            valentine: {
+                particles: ['❤️', '💕', '💖', '💗', '💘', '💝', '🌹', '✨'],
+                scenes: ['💕', '🧸', '💐', '🦢', '💝'],
+                buttonEmoji: '💕',
+                title: '💕 Bingo Love Globe'
+            },
+            halloween: {
+                particles: ['🦇', '🕷️', '👻', '🎃', '💀', '🕸️', '🌙', '⭐'],
+                scenes: ['🎃', '👻', '🦇', '🏚️', '🕷️'],
+                buttonEmoji: '🎃',
+                title: '🎃 Bingo Spooky Globe'
+            },
+            easter: {
+                particles: ['🐰', '🥚', '🌸', '🌷', '🦋', '🐣', '🌼', '✨'],
+                scenes: ['🐰', '🐣', '🧺', '🌷', '🥚'],
+                buttonEmoji: '🐰',
+                title: '🐰 Bingo Easter Globe'
+            },
+            summer: {
+                particles: ['☀️', '🌊', '🐚', '⭐', '🌴', '🏖️', '🐠', '🦀'],
+                scenes: ['🏖️', '🌴', '🐬', '🌺', '⛱️'],
+                buttonEmoji: '☀️',
+                title: '☀️ Bingo Beach Globe'
+            },
+            treehouse: {
+                particles: ['🌿', '🍃', '🌳', '🌲', '🍂', '⭐', '✨', '🦋'],
+                scenes: ['🏠', '🌳', '🌲', '🦉', '🌿'],
+                buttonEmoji: '🌳',
+                title: '🌳 Treehouse Bingo Globe'
+            },
+            thanksgiving: {
+                particles: ['🍂', '🍁', '🌾', '🦃', '🥧', '🌽', '🍎', '⭐'],
+                scenes: ['🦃', '🥧', '🌽', '🏠', '🍂'],
+                buttonEmoji: '🦃',
+                title: '🦃 Bingo Harvest Globe'
+            },
+            stpatricks: {
+                particles: ['☘️', '🍀', '⭐', '✨', '🌈', '💰', '🪙', '☘️'],
+                scenes: ['☘️', '🌈', '🍀', '💰', '🧙‍♂️'],
+                buttonEmoji: '☘️',
+                title: '☘️ Bingo Lucky Globe'
+            }
+        };
+
+        // ========================================
+        // STATE
+        // ========================================
+        let bingoItems = [];
+        let remainingItems = [];
+        let calledItems = [];
+        let currentTheme = DEFAULT_THEME;
+        let isShaking = false;
+
+        // ========================================
+        // INITIALIZATION
+        // ========================================
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadTheme();
+            await loadBingoItems();
+        });
+
+        async function loadTheme() {
+            try {
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SETTINGS_SHEET)}`;
+                const response = await fetch(url);
+                const text = await response.text();
+                
+                const jsonString = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?/);
+                if (jsonString) {
+                    const data = JSON.parse(jsonString[1]);
+                    if (data.table?.rows?.[1]?.c?.[0]?.v) {
+                        currentTheme = data.table.rows[1].c[0].v.toLowerCase().replace(/[^a-z]/g, '');
+                    }
+                }
+            } catch (error) {
+                console.log('Settings not found, using default theme');
+            }
+            
+            if (!THEMES[currentTheme]) currentTheme = DEFAULT_THEME;
+            
+            document.body.className = `theme-${currentTheme}`;
+            document.getElementById('globeTitle').textContent = THEMES[currentTheme].title;
+            document.getElementById('shakeBtn').textContent = `${THEMES[currentTheme].buttonEmoji} SHAKE!`;
+            updateScene();
+        }
+
+        async function loadBingoItems() {
+            try {
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+                const response = await fetch(url);
+                const text = await response.text();
+                
+                const jsonString = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?/);
+                if (!jsonString) throw new Error('Unable to parse sheet data');
+                
+                const data = JSON.parse(jsonString[1]);
+                if (!data.table?.rows) throw new Error('No data found');
+
+                bingoItems = [];
+                const startRow = HAS_HEADER ? 1 : 0;
+                
+                for (let i = startRow; i < data.table.rows.length; i++) {
+                    const row = data.table.rows[i];
+                    if (row.c?.[ITEMS_COLUMN]?.v) {
+                        const item = String(row.c[ITEMS_COLUMN].v).trim();
+                        if (item) bingoItems.push(item);
+                    }
+                }
+
+                if (bingoItems.length < 1) throw new Error('No bingo items found');
+
+                remainingItems = [...bingoItems];
+                
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                updateProgress();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loadingState').innerHTML = `
+                    <p style="color: #ffcccc;">❌ ${error.message}</p>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Make sure your Google Sheet is shared publicly</p>
+                `;
+            }
+        }
+
+        // ========================================
+        // GLOBE FUNCTIONS
+        // ========================================
+        function shakeGlobe() {
+            if (isShaking || remainingItems.length === 0) return;
+            
+            isShaking = true;
+            const globe = document.getElementById('globe');
+            const shakeBtn = document.getElementById('shakeBtn');
+            
+            shakeBtn.disabled = true;
+            globe.classList.add('shaking');
+            
+            // Hide previous content
+            document.getElementById('tapHint').style.display = 'none';
+            document.getElementById('itemNumber').classList.remove('show');
+            document.getElementById('itemText').classList.remove('show');
+            
+            // Create particles
+            createParticles();
+            
+            // Change scene
+            updateScene();
+            
+            // After shake animation (0.4s), show result
+            setTimeout(() => {
+                globe.classList.remove('shaking');
+                showResult();
+            }, 400);
+        }
+
+        function createParticles() {
+            const container = document.getElementById('particles');
+            container.innerHTML = '';
+            container.classList.remove('active');
+            
+            const theme = THEMES[currentTheme];
+            const particleCount = 25;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.textContent = theme.particles[Math.floor(Math.random() * theme.particles.length)];
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.animationDuration = `${1.5 + Math.random() * 1}s`;
+                particle.style.animationDelay = `${Math.random() * 0.3}s`;
+                particle.style.fontSize = `${12 + Math.random() * 10}px`;
+                container.appendChild(particle);
+            }
+            
+            // Trigger animation
+            requestAnimationFrame(() => {
+                container.classList.add('active');
+            });
+        }
+
+        function updateScene() {
+            const theme = THEMES[currentTheme];
+            const scene = document.getElementById('scene');
+            scene.textContent = theme.scenes[Math.floor(Math.random() * theme.scenes.length)];
+        }
+
+        function showResult() {
+            // Pick random item from remaining
+            const randomIndex = Math.floor(Math.random() * remainingItems.length);
+            const item = remainingItems.splice(randomIndex, 1)[0];
+            const itemNum = calledItems.length + 1;
+            
+            calledItems.push({ num: itemNum, text: item });
+            
+            // Display in globe
+            const itemNumber = document.getElementById('itemNumber');
+            const itemText = document.getElementById('itemText');
+            
+            itemNumber.textContent = `#${itemNum}`;
+            itemText.textContent = item;
+            
+            // Animate in (staggered)
+            setTimeout(() => itemNumber.classList.add('show'), 100);
+            setTimeout(() => itemText.classList.add('show'), 300);
+            
+            // Update called list
+            updateCalledList();
+            updateProgress();
+            
+            // Re-enable button
+            setTimeout(() => {
+                isShaking = false;
+                document.getElementById('shakeBtn').disabled = false;
+                
+                if (remainingItems.length === 0) {
+                    document.getElementById('doneMessage').classList.add('show');
+                    document.getElementById('shakeBtn').disabled = true;
+                    document.getElementById('shakeBtn').textContent = '✅ Complete!';
+                }
+            }, 600);
+        }
+
+        function updateCalledList() {
+            const container = document.getElementById('calledItems');
+            container.innerHTML = calledItems.map(item => 
+                `<span class="called-item"><span class="num">${item.num}</span>${item.text}</span>`
+            ).join('');
+            
+            // Scroll to bottom
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function updateProgress() {
+            const total = bingoItems.length;
+            const called = calledItems.length;
+            const percent = (called / total) * 100;
+            
+            document.getElementById('progressText').textContent = `${called} of ${total} called`;
+            document.getElementById('progressFill').style.width = `${percent}%`;
+        }
+
+        function resetGame() {
+            if (!confirm('Start over? This will reset all called items.')) return;
+            
+            remainingItems = [...bingoItems];
+            calledItems = [];
+            
+            document.getElementById('calledItems').innerHTML = 
+                '<span style="color: #999; font-size: 0.85rem;">Shake the globe to start!</span>';
+            document.getElementById('tapHint').style.display = 'block';
+            document.getElementById('itemNumber').classList.remove('show');
+            document.getElementById('itemText').classList.remove('show');
+            document.getElementById('doneMessage').classList.remove('show');
+            document.getElementById('shakeBtn').disabled = false;
+            document.getElementById('shakeBtn').textContent = `${THEMES[currentTheme].buttonEmoji} SHAKE!`;
+            
+            updateProgress();
+            updateScene();
+        }
+    </script>
+</body>
+</html>
